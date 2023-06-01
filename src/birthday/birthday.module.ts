@@ -4,6 +4,6 @@ import { BirthdayService } from './services/birthday/birthday.service';
 
 @Module({
   controllers: [BirthdayController],
-  providers: [BirthdayService]
+  providers: [BirthdayService],
 })
 export class BirthdayModule {}
