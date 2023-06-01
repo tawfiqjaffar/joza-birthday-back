@@ -1,4 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class Birthday {
@@ -21,4 +27,35 @@ export class Birthday {
     name: 'date_of_birth',
   })
   dateOfBirth: Date;
+
+  @Column({
+    type: 'boolean',
+    name: 'alert_week_before',
+    default: false,
+  })
+  alertWeekBefore: boolean;
+
+  @Column({
+    type: 'boolean',
+    name: 'alert_day_before',
+    default: false,
+  })
+  alertDayBefore: boolean;
+
+  @Column({
+    type: 'boolean',
+    name: 'alert_on_the_day',
+    default: true,
+  })
+  alertOnTheDay: boolean;
+
+  @CreateDateColumn({
+    type: 'timestamp',
+  })
+  created_at: Date;
+
+  @UpdateDateColumn({
+    type: 'timestamp',
+  })
+  updated_at: Date;
 }
