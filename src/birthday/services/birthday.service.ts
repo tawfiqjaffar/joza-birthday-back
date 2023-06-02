@@ -18,8 +18,8 @@ export class BirthdayService {
 
   findBy;
 
-  createBirthday(createBirthdayDto: BirthdayDto) {
-    const birthdayOptional = this.birthdayRepository.findOne({
+  async createBirthday(createBirthdayDto: BirthdayDto) {
+    const birthdayOptional = await this.birthdayRepository.findOne({
       where: {
         email: createBirthdayDto.email,
       },
