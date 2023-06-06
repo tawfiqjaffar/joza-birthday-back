@@ -5,6 +5,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { IsBoolean, IsDateString, IsEmail, IsNotEmpty } from 'class-validator';
 
 @Entity()
 export class Birthday {
@@ -19,6 +20,8 @@ export class Birthday {
     default: '',
     unique: true,
   })
+  @IsNotEmpty()
+  @IsEmail()
   email: string;
 
   @Column({
@@ -26,6 +29,7 @@ export class Birthday {
     type: 'timestamp',
     name: 'date_of_birth',
   })
+  @IsDateString()
   dateOfBirth: Date;
 
   @Column({
@@ -33,6 +37,7 @@ export class Birthday {
     name: 'alert_week_before',
     default: false,
   })
+  @IsBoolean()
   alertWeekBefore: boolean;
 
   @Column({
@@ -40,6 +45,7 @@ export class Birthday {
     name: 'alert_day_before',
     default: false,
   })
+  @IsBoolean()
   alertDayBefore: boolean;
 
   @Column({
@@ -47,15 +53,26 @@ export class Birthday {
     name: 'alert_on_the_day',
     default: true,
   })
+  @IsBoolean()
   alertOnTheDay: boolean;
+
+  @Column({
+    type: 'text',
+    name: 'full_name',
+    default: '',
+  })
+  @IsNotEmpty()
+  fullName: string;
 
   @CreateDateColumn({
     type: 'timestamp',
+    name: 'created_at',
   })
-  created_at: Date;
+  createdAt: Date;
 
   @UpdateDateColumn({
     type: 'timestamp',
+    name: 'updated_at',
   })
-  updated_at: Date;
+  updatedAt: Date;
 }

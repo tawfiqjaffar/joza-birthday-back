@@ -2,7 +2,6 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Birthday } from '../../typeorm';
 import { Repository } from 'typeorm';
-import { BirthdayDto } from '../models/birthday.dto';
 import { Precondition } from '../../common/precondition';
 
 @Injectable()
@@ -16,9 +15,7 @@ export class BirthdayService {
     return this.birthdayRepository.find();
   }
 
-  findBy;
-
-  async createBirthday(createBirthdayDto: BirthdayDto) {
+  async createBirthday(createBirthdayDto: Birthday) {
     const birthdayOptional = await this.birthdayRepository.findOne({
       where: {
         email: createBirthdayDto.email,
@@ -29,6 +26,7 @@ export class BirthdayService {
       'Birthday already exists for given user',
       HttpStatus.CONFLICT,
     );
+
     const newBirthday = this.birthdayRepository.create(createBirthdayDto);
     return this.birthdayRepository.save(newBirthday);
   }
@@ -45,5 +43,17 @@ export class BirthdayService {
       HttpStatus.NOT_FOUND,
     );
     return birthdayOptional;
+  }
+
+  async deleteById(id: number) {
+    const birthdayOptional = await this.birthdayRepository.findOne({
+      where: { id },
+    });
+    Precondition.filterErrors(
+      birthdayOptional !== null,
+      "Birthday hasn't been found for given id",
+      HttpStatus.NOT_FOUND,
+    );
+    return this.birthdayRepository.remove(birthdayOptional);
   }
 }

@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  Param,
   Post,
   Query,
   UsePipes,
@@ -9,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { BirthdayService } from '../services/birthday.service';
 import { ApiTags } from '@nestjs/swagger';
-import { BirthdayDto } from '../models/birthday.dto';
+import { Birthday } from '../../typeorm';
 
 @ApiTags('birthdays')
 @Controller('birthdays')
@@ -23,12 +25,17 @@ export class BirthdayController {
 
   @Post()
   @UsePipes(ValidationPipe)
-  createBirthday(@Body() createBirthdayDto: BirthdayDto) {
+  createBirthday(@Body() createBirthdayDto: Birthday) {
     return this.birthdayService.createBirthday(createBirthdayDto);
   }
 
   @Get('find')
   findBirthdayByEmail(@Query('email') email: string) {
     return this.birthdayService.findByEmail(email);
+  }
+
+  @Delete(':id')
+  deleteById(@Param('id') id: number) {
+    return this.birthdayService.deleteById(id);
   }
 }

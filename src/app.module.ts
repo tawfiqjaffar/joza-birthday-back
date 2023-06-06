@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { BirthdayModule } from './birthday/birthday.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UsersModule } from './users/users.module';
 
 import entities from './typeorm';
 
@@ -25,6 +26,7 @@ import entities from './typeorm';
       inject: [ConfigService],
     }),
     BirthdayModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
