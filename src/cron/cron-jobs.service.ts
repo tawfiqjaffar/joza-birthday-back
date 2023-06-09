@@ -23,7 +23,14 @@ export class CronJobsService {
     const birthdaysNextWeek =
       await this.birthdayService.findAlertsForNextWeek();
 
-    const mailMessage = this.mailjetService.writeMailMessage(
+    if (
+      birthdaysToday.length === 0 &&
+      birthdaysTomorrow.length === 0 &&
+      birthdaysNextWeek.length === 0
+    ) {
+      return;
+    }
+    const mailMessage = await this.mailjetService.writeMailMessage(
       birthdaysToday,
       birthdaysTomorrow,
       birthdaysNextWeek,

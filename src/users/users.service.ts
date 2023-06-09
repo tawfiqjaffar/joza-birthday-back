@@ -18,7 +18,9 @@ export class UsersService {
     try {
       const response = await firstValueFrom(
         this.httpService
-          .get('http://localhost:8085/google-workspace/users?pageLimit=100')
+          .get(
+            `${process.env.JOZA_UD_API_URL}/google-workspace/users?pageLimit=100`,
+          )
           .pipe(map((el) => el.data.content.users)),
       );
       console.log(response);

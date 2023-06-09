@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { MailService } from './mail.service';
-import { MailjetModule } from 'nest-mailjet';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
-  imports: [MailjetModule],
   exports: [MailService],
+  imports: [HttpModule],
   providers: [MailService],
 })
 export class MailModule {}

@@ -1,11 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Birthday } from '../typeorm';
 import * as moment from 'moment';
-import { MailjetService } from 'nest-mailjet';
+import { HttpService } from '@nestjs/axios';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class MailService {
-  constructor(private readonly mailjetService: MailjetService) {}
+  constructor(private readonly httpService: HttpService) {}
 
   async writeMailMessage(
     birthdaysToday: Birthday[],
@@ -37,22 +38,22 @@ export class MailService {
     return message;
   }
 
-  private async sendMail(message: string) {
-    return await this.mailjetService.send({
-      Messages: [
-        {
-          From: {
-            Email: 'tawfiq.jaffar@joza-it.fr',
-          },
-          To: [
-            {
-              Email: 'tawfiq.jaffar@joza-it.fr',
-            },
-          ],
-          Subject: '[JOZA] - Anniversaires des consultants',
-          TextPart: message,
-        },
-      ],
-    });
+  async sendMail(message: string) {
+    try {
+      const response = await firstValueFrom(
+        this.httpService.post(`${process.env.JOZA_UD_API_URL}/mail/send-mail`, {
+          message,
+          destination: 'tawfiq.jaffar+1@joza-it.fr',
+          subject: "[JOZA] - Alertes d'anniversaire",
+        }),
+      );
+      return response;
+    } catch (e: any) {
+      throw new HttpException(
+        'Sending mail failed',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        e,
+      );
+    }
   }
 }

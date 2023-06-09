@@ -11,7 +11,8 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { CronJobsService } from './cron/cron-jobs.service';
 import { CronJobsModule } from './cron/cron-jobs.module';
 import { MailService } from './mailjet/mail.service';
-import { MailjetModule, MailjetService } from 'nest-mailjet';
+import { MailModule } from './mailjet/mail.module';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -30,18 +31,13 @@ import { MailjetModule, MailjetService } from 'nest-mailjet';
       }),
       inject: [ConfigService],
     }),
-    MailjetModule.registerAsync({
-      useFactory: () => ({
-        apiKey: process.env.MAILJET_API_KEY,
-        apiSecret: process.env.MAILJET_API_SECRET,
-      }),
-    }),
     BirthdayModule,
+    MailModule,
+    HttpModule,
     UsersModule,
     CronJobsModule,
-    MailjetModule,
   ],
   controllers: [AppController],
-  providers: [AppService, CronJobsService, MailService, MailjetService],
+  providers: [AppService, CronJobsService, MailService],
 })
 export class AppModule {}
