@@ -7,6 +7,7 @@ import { Birthday } from '../typeorm';
 @Module({
   controllers: [BirthdayController],
   providers: [BirthdayService],
+  exports: [BirthdayService],
   imports: [TypeOrmModule.forFeature([Birthday])],
 })
 export class BirthdayModule {}

@@ -56,4 +56,59 @@ export class BirthdayService {
     );
     return this.birthdayRepository.remove(birthdayOptional);
   }
+
+  async findAlertsForToday() {
+    const connection = this.birthdayRepository.manager;
+
+    const today = new Date();
+    const day = today.getDate();
+    const month = today.getMonth() + 1;
+
+    const query = connection
+      .createQueryBuilder()
+      .select('birthday')
+      .from(Birthday, 'birthday')
+      .where(`extract(month from birthday.date_of_birth) = :month`, { month })
+      .andWhere(`extract(day from birthday.date_of_birth) = :day`, { day })
+      .andWhere(`alert_on_the_day = true`);
+
+    return await query.getMany();
+  }
+
+  async findAlertsForTomorrow() {
+    const connection = this.birthdayRepository.manager;
+
+    const today = new Date();
+    const day = today.getDate() + 1;
+    const month = today.getMonth() + 1;
+
+    const query = connection
+      .createQueryBuilder()
+      .select('birthday')
+      .from(Birthday, 'birthday')
+      .where(`extract(month from birthday.date_of_birth) = :month`, { month })
+      .andWhere(`extract(day from birthday.date_of_birth) = :day`, { day })
+      .andWhere(`alert_day_before = true`);
+
+    return await query.getMany();
+  }
+
+  async findAlertsForNextWeek() {
+    const connection = this.birthdayRepository.manager;
+
+    const nextWeek = new Date();
+    nextWeek.setDate(nextWeek.getDate() + 7);
+    const day = nextWeek.getDate();
+    const month = nextWeek.getMonth() + 1;
+
+    const query = connection
+      .createQueryBuilder()
+      .select('birthday')
+      .from(Birthday, 'birthday')
+      .where(`extract(month from birthday.date_of_birth) = :month`, { month })
+      .andWhere(`extract(day from birthday.date_of_birth) = :day`, { day })
+      .andWhere(`alert_week_before = true`);
+
+    return await query.getMany();
+  }
 }

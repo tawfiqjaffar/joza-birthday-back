@@ -7,12 +7,17 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 
 import entities from './typeorm';
+import { ScheduleModule } from '@nestjs/schedule';
+import { CronJobsService } from './cron/cron-jobs.service';
+import { CronJobsModule } from './cron/cron-jobs.module';
+import { MailService } from './mailjet/mail.service';
+import { MailjetModule, MailjetService } from 'nest-mailjet';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
+      imports: [ConfigModule, ScheduleModule.forRoot()],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
         host: configService.get('DB_HOST'),
@@ -25,10 +30,18 @@ import entities from './typeorm';
       }),
       inject: [ConfigService],
     }),
+    MailjetModule.registerAsync({
+      useFactory: () => ({
+        apiKey: process.env.MAILJET_API_KEY,
+        apiSecret: process.env.MAILJET_API_SECRET,
+      }),
+    }),
     BirthdayModule,
     UsersModule,
+    CronJobsModule,
+    MailjetModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, CronJobsService, MailService, MailjetService],
 })
 export class AppModule {}

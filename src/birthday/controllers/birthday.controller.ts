@@ -38,4 +38,9 @@ export class BirthdayController {
   deleteById(@Param('id') id: number) {
     return this.birthdayService.deleteById(id);
   }
+
+  @Get('today')
+  findAlertsForToday() {
+    return this.birthdayService.findAlertsForToday();
+  }
 }
